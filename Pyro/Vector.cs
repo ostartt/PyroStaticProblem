@@ -14,6 +14,12 @@ public class Vector
 
     public int Size { get; }
 
+    public Vector(double[] vector)
+    {
+        _vector = vector;
+        Size = vector.Length;
+    }
+
     public Vector(int size, bool rand = false, int min = MinVal, int max = MaxVal)
     {
         if (size < 1)
@@ -276,13 +282,14 @@ public class Vector
 
         return result;
     }
+
     public static Vector ReadVector(string path)
     {
         if (!File.Exists(path))
         {
             throw new FileNotFoundException("File does not exist");
         }
-        
+
         string[] lines = File.ReadAllLines(path);
         int[] numArray = Array.ConvertAll(lines[0].Split(' '), int.Parse);
         Vector vector = new Vector(numArray.Length);

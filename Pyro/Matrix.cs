@@ -11,11 +11,18 @@ public class Matrix
 
     private const int MinVal = 1;
     private const int MaxVal = 10;
-    private const int BlockOfThree = 3;
+    public const int BlockOfThree = 3;
 
     public int Rows { get; }
 
     public int Columns { get; }
+
+    public Matrix(double[,] matrix)
+    {
+        _matrix = matrix;
+        Rows = matrix.GetLength(0);
+        Columns = matrix.GetLength(1);
+    }
 
     public Matrix(int rows, int columns, bool rand = false, int min = MinVal, int max = MaxVal)
     {
@@ -116,20 +123,12 @@ public class Matrix
         {
             for (int j = 0; j < Columns; j++)
             {
-                matrixToString.Append(_matrix[i, j]);
-
-                if (j != Columns - 1)
-                {
-                    matrixToString.Append('\t');
-                }
-                else
-                {
-                    matrixToString.Append('\n');
-                }
+                matrixToString.Append(_matrix[i, j] + "\t");
             }
+            matrixToString.Append("\n");
         }
 
-        return matrixToString.ToString() + '\n';
+        return matrixToString + "\n";
     }
 
     public static Matrix operator *(Matrix matrix, double number)
@@ -426,7 +425,7 @@ public class Matrix
         for (int i = 0; i < n; ++i)
         {
             Vector mult = vector[i];
-            
+
             if (i >= 1)
             {
                 mult -= betta[i] * v[i - 1];
