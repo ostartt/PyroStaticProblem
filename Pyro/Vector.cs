@@ -5,7 +5,7 @@ namespace Pyro;
 using System;
 using System.IO;
 
-public class Vector
+public class Vector : ICloneable
 {
     private readonly double[] _vector;
 
@@ -18,6 +18,12 @@ public class Vector
     {
         _vector = vector;
         Size = vector.Length;
+    }
+
+    public Vector(double value1, double value2, double value3)
+    {
+        _vector = new[] { value1, value2, value3 };
+        Size = _vector.Length;
     }
 
     public Vector(int size, bool rand = false, int min = MinVal, int max = MaxVal)
@@ -107,6 +113,11 @@ public class Vector
         }
 
         return vectorToString.ToString() + '\n';
+    }
+
+    public object Clone()
+    {
+        return new Vector(this);
     }
 
     public static Vector operator *(Vector vector, int number)
@@ -311,5 +322,10 @@ public class Vector
 
         File.WriteAllText(path, string.Empty);
         File.WriteAllText(path, vector.ToString());
+    }
+
+    public static Vector[] CloneVectorArray(Vector[] toClone)
+    {
+        return toClone.Select(matrix => (Vector)matrix.Clone()).ToArray();
     }
 }

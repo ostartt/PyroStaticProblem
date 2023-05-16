@@ -16,24 +16,39 @@
             double hL = 100;
 
             PyroSolver pyroSolver = new PyroSolver();
-            pyroSolver.CalculateInitialBlockMatrices();
-            pyroSolver.CalculateInitialBlockVector();
-            Console.WriteLine(pyroSolver.DerBlockMatrix);
 
-            Matrix cBiForm = pyroSolver.DerBlockMatrix * c;
-            Matrix eBiForm = pyroSolver.DerBlockMatrix * e;
-            Matrix gBiForm = pyroSolver.DerBlockMatrix * g;
-            Matrix kBiForm = pyroSolver.DerBlockMatrix * lambda;
-            Matrix yBiForm = pyroSolver.DerFuncBlockMatrix * alpha * c;
-            Matrix piBiForm = pyroSolver.DerFuncBlockMatrix * pi;
+            pyroSolver.LinearFuncVector = new Vector(2 * PyroSolver.N + 1);
+            pyroSolver.PhiDerMatrix = new Matrix(2 * PyroSolver.N + 1, 5);
+            pyroSolver.PhiDerFuncMatrix = new Matrix(2 * PyroSolver.N + 1, 5);
 
-            double[] rArray = new double[2 * PyroSolver.N + 1];
-            // Array.Fill(rArray, );
-            // Vector rLinFunctional = new Vector();
+            pyroSolver.CalculateInitialBiForm(pyroSolver.PhiDerMatrix, PyroSolver.DerBlock);
+            pyroSolver.CalculateInitialBiForm(pyroSolver.PhiDerFuncMatrix, PyroSolver.DerFuncBlock);
+            // pyroSolver.CalculateInitialLinearFunc(pyroSolver.LinearFuncVector);
 
+            pyroSolver.CBiForm = new Matrix(pyroSolver.PhiDerMatrix) * c;
+            pyroSolver.EBiForm = new Matrix(pyroSolver.PhiDerMatrix) * e;
+            pyroSolver.GBiForm = new Matrix(pyroSolver.PhiDerMatrix) * g;
+            pyroSolver.KBiForm = new Matrix(pyroSolver.PhiDerMatrix) * lambda;
+            pyroSolver.YBiForm = new Matrix(pyroSolver.PhiDerFuncMatrix) * alpha * c;
+            pyroSolver.PiBiForm = new Matrix(pyroSolver.PhiDerFuncMatrix) * pi;
 
+            pyroSolver.LFunc = new Vector(2 * PyroSolver.N + 1);
+            pyroSolver.RFunc = new Vector(2 * PyroSolver.N + 1);
+            pyroSolver.MuFunc = new Vector(2 * PyroSolver.N + 1);
 
+            pyroSolver.LFunc[2 * PyroSolver.N] = sigmaL;
+            pyroSolver.RFunc[2 * PyroSolver.N] = DL;
+            pyroSolver.MuFunc[2 * PyroSolver.N] = hL;
+
+            Matrix[,] finalMatrix = pyroSolver.FormFinalMatrix();
+            Vector[] finalVector = pyroSolver.FormFinalVector();
+
+            Vector[] solution = PyroSolver.FiveDiagonalLowerUpperMethod(finalMatrix, finalVector);
+
+            // for (int i = 0; i < solution.Length; i++)
+            // {
+            //     Console.WriteLine(solution[i]);
+            // }
         }
     }
 }
-
