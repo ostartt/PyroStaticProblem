@@ -23,14 +23,14 @@
 
             pyroSolver.CalculateInitialBiForm(pyroSolver.PhiDerMatrix, PyroSolver.DerBlock);
             pyroSolver.CalculateInitialBiForm(pyroSolver.PhiDerFuncMatrix, PyroSolver.DerFuncBlock);
-            // pyroSolver.CalculateInitialLinearFunc(pyroSolver.LinearFuncVector);
 
             pyroSolver.CBiForm = new Matrix(pyroSolver.PhiDerMatrix) * c;
             pyroSolver.EBiForm = new Matrix(pyroSolver.PhiDerMatrix) * e;
             pyroSolver.GBiForm = new Matrix(pyroSolver.PhiDerMatrix) * g;
             pyroSolver.KBiForm = new Matrix(pyroSolver.PhiDerMatrix) * lambda;
-            pyroSolver.YBiForm = new Matrix(pyroSolver.PhiDerFuncMatrix) * alpha * c;
-            pyroSolver.PiBiForm = new Matrix(pyroSolver.PhiDerFuncMatrix) * pi;
+            pyroSolver.YBiForm = new Matrix(pyroSolver.PhiDerFuncMatrix) * alpha * c; // transpose
+            pyroSolver.PiBiForm = new Matrix(pyroSolver.PhiDerFuncMatrix) * pi; // transpose
+            
 
             pyroSolver.LFunc = new Vector(2 * PyroSolver.N + 1);
             pyroSolver.RFunc = new Vector(2 * PyroSolver.N + 1);
@@ -41,14 +41,19 @@
             pyroSolver.MuFunc[2 * PyroSolver.N] = hL;
 
             Matrix[,] finalMatrix = pyroSolver.FormFinalMatrix();
+            finalMatrix[0, 2][0, 0] = Math.Pow(10, 20);
+            finalMatrix[0, 2][1, 1] = Math.Pow(10, 20);
+            finalMatrix[0, 2][2, 2] = Math.Pow(10, 20);
+            
             Vector[] finalVector = pyroSolver.FormFinalVector();
 
             Vector[] solution = PyroSolver.FiveDiagonalLowerUpperMethod(finalMatrix, finalVector);
 
-            // for (int i = 0; i < solution.Length; i++)
-            // {
-            //     Console.WriteLine(solution[i]);
-            // }
+            for (int i = 0; i < solution.Length; i++)
+            {
+                   Console.WriteLine(solution[i]);
+            }
+            
         }
     }
 }

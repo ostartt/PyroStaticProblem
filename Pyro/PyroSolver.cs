@@ -5,7 +5,7 @@ public class PyroSolver
     public const int BlockOfThree = 3;
     public const int BlockOfFive = 5;
     public const double L = 0.01;
-    public const int N = 10;
+    public const int N = 5;
     private const double H = L / N;
     public Matrix PhiDerMatrix { get; set; }
     public Matrix PhiDerFuncMatrix { get; set; }
@@ -113,96 +113,81 @@ public class PyroSolver
 
         return finalForm;
     }
-
-    public static Vector[] FiveDiagonalLowerUpperMethod(Matrix[,] matrix, Vector[] vector)
-    {
-        int n = vector.Length;
-        Matrix[] alpha = new Matrix[n];
-        Matrix[] betta = new Matrix[n];
-        Matrix[] gamma = new Matrix[n];
-        Matrix[] sigma = new Matrix[n];
-        Matrix[] etha = new Matrix[n];
-
-        for (int i = 0; i < n; ++i)
+    
+     public static Vector[] FiveDiagonalLowerUpperMethod(Matrix[,] A, Vector[] F)
         {
-            if (i >= 2)
-            {
-                alpha[i] = matrix[i, 0];
-            }
+            int n = F.Length;
 
-            if (i >= 1)
+            Matrix[] alpha = new Matrix[n];
+            Matrix[] beta = new Matrix[n];
+            Matrix[] gama = new Matrix[n];
+            Matrix[] sigma = new Matrix[n];
+            Matrix[] etha = new Matrix[n];
+
+
+            for (int i = 0; i < n; ++i)
             {
-                betta[i] = matrix[i, 1];
                 if (i >= 2)
-                {
-                    betta[i] -= matrix[i, 0] * sigma[i - 2];
-                }
-            }
+                    alpha[i] = A[i, 0];
 
-            gamma[i] = matrix[i, 2];
-
-            if (i >= 1)
-            {
-                gamma[i] -= betta[i] * sigma[i - 1];
-            }
-
-            if (i >= 2)
-            {
-                gamma[i] -= matrix[i, 0] * etha[i - 2];
-            }
-
-            if (i <= n - 2)
-            {
-                Matrix mult = matrix[i, 3];
                 if (i >= 1)
-                    mult -= betta[i] * etha[i - 1];
-                sigma[i] = Matrix.InverseMatrix(gamma[i]) * mult;
+                {
+                    beta[i] = A[i, 1];
+                    if (i >= 2)
+                        beta[i] -= A[i, 0] * sigma[i - 2];
+                }
+
+                gama[i] = A[i, 2];
+
+                if (i >= 1)
+                    gama[i] -= beta[i] * sigma[i - 1];
+                if (i >= 2)
+                    gama[i] -= A[i, 0] * etha[i - 2];
+
+
+                if (i <= n - 2)
+                {
+                    Matrix mult = A[i, 3];
+                    if (i >= 1)
+                        mult -= beta[i] * etha[i - 1];
+                    sigma[i] = Matrix.InverseMatrix(gama[i]) * mult;
+
+                }
+
+                if (i <= n - 3)
+                {
+                    etha[i] = Matrix.InverseMatrix(gama[i]) * A[i, 4];
+                }
+
             }
 
+            Vector[] v = new Vector[n];
 
-            if (i <= n - 3)
+            for (int i = 0; i < n; ++i)
             {
-                etha[i] = Matrix.InverseMatrix(gamma[i]) * matrix[i, 4];
+                Vector mult = F[i];
+                if (i >= 1)
+                    mult -= beta[i] * v[i - 1];
+
+                if (i >= 2)
+                    mult -= A[i, 0] * v[i - 2];
+
+                v[i] = Matrix.InverseMatrix(gama[i]) * mult;
             }
+
+            Vector[] w = new Vector[n];
+
+            for (int i = n - 1; i >= 0; --i)
+            {
+                w[i] = v[i];
+
+                if (i < n - 1)
+                    w[i] -= sigma[i] * w[i + 1];
+
+                if (i < n - 2)
+                    w[i] -= etha[i] * w[i + 2];
+            }
+
+            return w;
         }
-
-        Vector[] v = new Vector[n];
-
-        for (int i = 0; i < n; ++i)
-        {
-            Vector mult = vector[i];
-
-            if (i >= 1)
-            {
-                mult -= betta[i] * v[i - 1];
-            }
-
-            if (i >= 2)
-            {
-                mult -= matrix[i, 0] * v[i - 2];
-            }
-
-            v[i] = Matrix.InverseMatrix(gamma[i]) * mult;
-        }
-
-        Vector[] w = new Vector[n];
-
-
-        for (int i = n - 1; i >= 0; --i)
-        {
-            w[i] = v[i];
-
-            if (i < n - 1)
-            {
-                w[i] -= sigma[i] * w[i + 1];
-            }
-
-            if (i < n - 2)
-            {
-                w[i] -= etha[i] * w[i + 2];
-            }
-        }
-
-        return w;
-    }
 }
