@@ -1,0 +1,11 @@
+D:\Projects Visual\PyroProblem\PyroProblem\bin\Debug\PyroProblem.exe.config
+D:\Projects Visual\PyroProblem\PyroProblem\bin\Debug\PyroProblem.exe
+D:\Projects Visual\PyroProblem\PyroProblem\bin\Debug\PyroProblem.pdb
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.csproj.AssemblyReference.cache
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.csproj.SuggestedBindingRedirects.cache
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.Properties.Resources.resources
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.csproj.GenerateResource.cache
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.csproj.CoreCompileInputs.cache
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.exe
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.pdb
+D:\Projects Visual\PyroProblem\PyroProblem\obj\Debug\PyroProblem.Form1.resources
